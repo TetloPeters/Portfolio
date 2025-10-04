@@ -1,0 +1,92 @@
+:root{
+  --accent:#8fc9c6;
+  --dark:#222028;
+  --muted:#6b6b6b;
+  --bg:#f7f7f7;
+  --card:#ffffff;
+  --sidebar-width:320px;
+  --max-width:1100px;
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);color:#222}
+a{color:var(--dark);text-decoration:none}
+.container{
+  max-width:var(--max-width);
+  margin:30px auto;
+  display:flex;
+  gap:28px;
+  padding:20px;
+}
+
+/* Sidebar */
+.sidebar{
+  width:var(--sidebar-width);
+  background:var(--dark);
+  color:#fff;
+  border-radius:6px;
+  padding:20px 18px;
+  flex-shrink:0;
+  display:flex;
+  align-items:flex-start;
+}
+.sidebar-inner{
+  width:100%;
+}
+.name{
+  font-size:20px;
+  letter-spacing:1px;
+  margin:0 0 10px 0;
+  color:var(--accent);
+}
+.contact{list-style:none;padding:0;margin:6px 0 16px 0;font-size:14px}
+.contact li{margin:6px 0;color:#e6e6e6}
+.sidebar-heading{font-size:13px;margin:14px 0 8px 0;color:#ddd}
+.skills{list-style:none;padding:0;margin:0 0 12px 0;columns:1}
+.skills li{margin:6px 0;color:#e6e6e6;font-size:14px}
+.refs p{font-size:13px;color:#eaeaea;margin:8px 0}
+.btn{
+  display:inline-block;
+  margin-top:12px;
+  background:var(--accent);
+  color:#0b2323;
+  padding:8px 12px;
+  border-radius:4px;
+  font-weight:600;
+}
+
+/* Content */
+.content{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+.card{
+  background:var(--card);
+  padding:16px;
+  border-radius:6px;
+  box-shadow:0 6px 14px rgba(20,20,20,0.04);
+}
+.card-title{
+  margin:0 0 10px 0;
+  font-size:15px;
+  color:var(--accent);
+  text-transform:uppercase;
+  letter-spacing:0.8px;
+}
+.profile p, .education p, .employment p, .extra p{color:#333;line-height:1.45}
+.projects .project{border-top:1px solid #f1f1f1;padding-top:10px;margin-top:10px}
+.projects .project h4{margin:0 0 6px 0;font-size:14px}
+.projects .project p{margin:0;color:var(--muted)}
+
+/* Footer */
+.page-footer{font-size:13px;color:var(--muted);text-align:right;padding:6px 0}
+
+/* Responsive */
+@media (max-width:900px){
+  .container{flex-direction:column;padding:12px}
+  .sidebar{width:100%}
+  .page-footer{text-align:left}
+}
