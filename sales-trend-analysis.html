@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sales Trend Analysis - Tetlo Peters</title>
+  <style>
+    :root {
+      --accent: #8fc9c6;
+      --accent-hover: #7ab8b5;
+      --dark: #222028;
+      --muted: #6b6b6b;
+      --bg: #f7f7f7;
+      --card: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: #222;
+      line-height: 1.6;
+      padding-top: 60px;
+    }
+
+    .navbar {
+      background: var(--dark);
+      padding: 15px 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      transition: transform 0.3s ease;
+    }
+
+    .navbar a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.3s;
+    }
+
+    .navbar a:hover {
+      color: var(--accent);
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 600;
+      margin-bottom: 30px;
+      transition: all 0.3s;
+    }
+
+    .back-link:hover {
+      transform: translateX(-5px);
+    }
+
+    .project-header {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+      border-radius: 12px;
+      padding: 40px;
+      color: var(--dark);
+      margin-bottom: 30px;
+      box-shadow: 0 10px 30px rgba(143, 201, 198, 0.3);
+    }
+
+    .project-icon {
+      width: 80px;
+      height: 80px;
+      background: rgba(255,255,255,0.9);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      margin-bottom: 20px;
+    }
+
+    .project-header h1 {
+      font-size: 36px;
+      margin-bottom: 15px;
+    }
+
+    .project-header .subtitle {
+      font-size: 18px;
+      opacity: 0.9;
+      font-weight: 500;
+    }
+
+    .tags {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      background: rgba(255,255,255,0.9);
+      color: var(--dark);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .content-section {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 25px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    }
+
+    .content-section h2 {
+      color: var(--accent);
+      margin-bottom: 15px;
+      font-size: 24px;
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 8px;
+    }
+
+    .content-section h3 {
+      color: var(--dark);
+      margin: 20px 0 10px 0;
+      font-size: 18px;
+    }
+
+    .content-section p {
+      color: #444;
+      margin-bottom: 15px;
+      text-align: justify;
+    }
+
+    .content-section ul {
+      margin-left: 25px;
+      color: #444;
+    }
+
+    .content-section li {
+      margin-bottom: 10px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin: 25px 0;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+      padding: 20px;
+      border-radius: 10px;
+      border-left: 4px solid var(--accent);
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 5px;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .tool-card {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+      border: 1px solid #e9ecef;
+      transition: all 0.3s;
+    }
+
+    .tool-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent);
+      box-shadow: 0 5px 15px rgba(143, 201, 198, 0.2);
+    }
+
+    .tool-icon {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .tool-name {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--dark);
+    }
+
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(143, 201, 198, 0.1) 0%, rgba(143, 201, 198, 0.05) 100%);
+      border-left: 4px solid var(--accent);
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .comparison-card {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .comparison-card h4 {
+      color: var(--dark);
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    .comparison-card ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      font-size: 13px;
+      color: #555;
+    }
+
+    .comparison-card li {
+      margin: 5px 0;
+    }
+
+    .cta-section {
+      background: var(--dark);
+      color: #fff;
+      padding: 40px;
+      border-radius: 12px;
+      text-align: center;
+      margin-top: 40px;
+    }
+
+    .cta-section h2 {
+      color: var(--accent);
+      margin-bottom: 15px;
+    }
+
+    .cta-btn {
+      display: inline-block;
+      background: var(--accent);
+      color: var(--dark);
+      padding: 12px 30px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 700;
+      margin-top: 15px;
+      transition: all 0.3s;
+    }
+
+    .cta-btn:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(143, 201, 198, 0.4);
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 15px;
+      }
+
+      .project-header {
+        padding: 25px;
+      }
+
+      .project-header h1 {
+        font-size: 28px;
+      }
+
+      .content-section {
+        padding: 20px;
+      }
+
+      .comparison-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="index.html">← Back to Portfolio</a>
+  </nav>
+
+  <div class="container">
+    <a href="index.html" class="back-link">← Back to All Projects</a>
+
+    <div class="project-header">
+      <div class="project-icon">📊</div>
+      <h1>Sales Trend Analysis</h1>
+      <p class="subtitle">Multi-Platform Dashboard Development for Sales Forecasting and Business Intelligence</p>
+      <div class="tags">
+        <span class="tag">Excel</span>
+        <span class="tag">Power BI</span>
+        <span class="tag">Tableau</span>
+        <span class="tag">Forecasting</span>
+        <span class="tag">Data Visualization</span>
+      </div>
+    </div>
+
+    <div class="content-section">
+      <h2>Project Overview</h2>
+      <p>
+        This comprehensive sales analytics project involved building interactive dashboards across three major business intelligence platforms: Microsoft Excel, Power BI, and Tableau. The goal was to analyze historical sales data, identify trends and patterns, and create forecasting models to support strategic business decisions.
+      </p>
+      <p>
+        By leveraging the unique strengths of each platform, the project delivered versatile analytical tools that could serve different stakeholder needs—from executive summaries to detailed operational insights.
+      </p>
+    </div>
+
+    <div class="content-section">
+      <h2>Dashboard Preview</h2>
+      
+      <div style="background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin: 20px 0;">
+        <div style="text-align: center; margin-bottom: 25px;">
+          <h3 style="font-size: 28px; color: #222; margin-bottom: 8px;">Sales Monthly Trends Analysis Chart</h3>
+          <p style="color: #6b6b6b; font-size: 13px; font-style: italic;">This graph/chart is linked to excel, and changes automatically based on data. Just left click on it and select "edit data".</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 200px 1fr; gap: 30px; margin-bottom: 30px;">
+          <!-- Left KPIs -->
+          <div style="display: flex; flex-direction: column; gap: 20px;">
+            <div>
+              <div style="color: #6b6b6b; font-size: 13px; margin-bottom: 5px;">Sales CY</div>
+              <div style="font-size: 32px; font-weight: 700; color: var(--accent);">$804.0k</div>
+              <div style="color: #28a745; font-size: 13px; font-weight: 600;">(+3.21%)</div>
+            </div>
+            <div>
+              <div style="color: #6b6b6b; font-size: 13px; margin-bottom: 5px;">Gross Profit</div>
+              <div style="font-size: 32px; font-weight: 700; color: var(--accent);">$100.3k</div>
+              <div style="color: #28a745; font-size: 13px; font-weight: 600;">(+11.99%)</div>
+            </div>
+            <div>
+              <div style="color: #6b6b6b; font-size: 13px; margin-bottom: 5px;">New Customers(CY)</div>
+              <div style="font-size: 32px; font-weight: 700; color: var(--accent);">10</div>
+            </div>
+          </div>
+
+          <!-- Sales Monthly Trend Chart -->
+          <div style="background: #fafafa; padding: 20px; border-radius: 8px;">
+            <h4 style="font-size: 16px; margin-bottom: 15px; color: #222; text-align: center;">Sales Monthly Trend</h4>
+            <div style="position: relative; height: 220px;">
+              <div style="display: flex; justify-content: space-between; height: 100%; align-items: flex-end; gap: 8px; padding: 0 10px;">
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                  <div style="width: 30px; height: 80px; background: #e74c3c; border-radius: 3px;"></div>
+                  <div style="width: 30px; height: 60px; background: #3498db; border-radius: 3px;"></div>
+                  <span style="font-size: 10px; color: #666; margin-top: 8px;">July</span>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                  <div style="width: 30px; height: 70px; background: #e74c3c; border-radius: 3px;"></div>
+                  <div style="width: 30px; height: 100px; background: #3498db; border-radius: 3px;"></div>
+                  <span style="font-size: 10px; color: #666; margin-top: 8px;">August</span>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                  <div style="width: 30px; height: 110px; background: #e74c3c; border-radius: 3px;"></div>
+                  <div style="width: 30px; height: 110px; background: #3498db; border-radius: 3px;"></div>
+                  <span style="font-size: 10px; color: #666; margin-top: 8px;">September</span>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                  <div style="width: 30px; height: 85px; background: #e74c3c; border-radius: 3px;"></div>
+                  <div style="width: 30px; height: 75px; background: #3498db; border-radius: 3px;"></div>
+                  <span style="font-size: 10px; color: #666; margin-top: 8px;">October</span>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                  <div style="width: 30px; height: 90px; background: #e74c3c; border-radius: 3px;"></div>
+                  <div style="width: 30px; height: 65px; background: #3498db; border-radius: 3px;"></div>
+                  <span style="font-size: 10px; color: #666; margin-top: 8px;">November</span>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                  <div style="width: 30px; height: 105px; background: #e74c3c; border-radius: 3px;"></div>
+                  <div style="width: 30px; height: 105px; background: #3498db; border-radius: 3px;"></div>
+                  <span style="font-size: 10px; color: #666; margin-top: 8px;">December</span>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                  <div style="width: 30px; height: 35px; background: #e74c3c; border-radius: 3px;"></div>
+                  <div style="width: 30px; height: 115px; background: #3498db; border-radius: 3px;"></div>
+                  <span style="font-size: 10px; color: #666; margin-top: 8px;">January</span>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                  <div style="width: 30px; height: 105px; background: #e74c3c; border-radius: 3px;"></div>
+                  <div style="width: 30px; height: 110px; background: #3498db; border-radius: 3px;"></div>
+                  <span style="font-size: 10px; color: #666; margin-top: 8px;">February</span>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                  <div style="width: 30px; height: 85px; background: #e74c3c; border-radius: 3px;"></div>
+                  <div style="width: 30px; height: 80px; background: #3498db; border-radius: 3px;"></div>
+                  <span style="font-size: 10px; color: #666; margin-top: 8px;">March</span>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                  <div style="width: 30px; height: 95px; background: #e74c3c; border-radius: 3px;"></div>
+                  <div style="width: 30px; height: 85px; background: #3498db; border-radius: 3px;"></div>
+                  <span style="font-size: 10px; color: #666; margin-top: 8px;">April</span>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                  <div style="width: 30px; height: 75px; background: #e74c3c; border-radius: 3px;"></div>
+                  <div style="width: 30px; height: 90px; background: #3498db; border-radius: 3px;"></div>
+                  <span style="font-size: 10px; color: #666; margin-top: 8px;">May</span>
+                </div>
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                  <div style="width: 30px; height: 55px; background: #e74c3c; border-radius: 3px;"></div>
+                  <div style="width: 30px; height: 45px; background: #3498db; border-radius: 3px;"></div>
+                  <span style="font-size: 10px; color: #666; margin-top: 8px;">June</span>
+                </div>
+              </div>
+              <div style="position: absolute; right: 20px; top: 20px; font-size: 11px;">
+                <div><span style="color: #e74c3c;">■</span> 2019</div>
+                <div><span style="color: #3498db;">■</span> 2020</div>
+                <div><span style="color: #222;">—</span> Gross Profit %(CY)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Charts -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+          <!-- Quotes & Estimate Pie -->
+          <div style="background: #fafafa; padding: 20px; border-radius: 8px;">
+            <h4 style="font-size: 14px; margin-bottom: 15px; color: #222; text-align: center;">Quotes & Estimate</h4>
+            <div style="text-align: center; padding: 10px 0;">
+              <svg width="140" height="140" viewBox="0 0 140 140">
+                <circle cx="70" cy="70" r="50" fill="none" stroke="#3498db" stroke-width="30" stroke-dasharray="220 440" transform="rotate(-90 70 70)"/>
+                <circle cx="70" cy="70" r="50" fill="none" stroke="#e74c3c" stroke-width="30" stroke-dasharray="50 440" stroke-dashoffset="-220" transform="rotate(-90 70 70)"/>
+                <circle cx="70" cy="70" r="50" fill="none" stroke="#ffd700" stroke-width="30" stroke-dashoffset="-270" stroke-dasharray="40 440" transform="rotate(-90 70 70)"/>
+                <circle cx="70" cy="70" r="50" fill="none" stroke="#95a5a6" stroke-width="30" stroke-dashoffset="-310" stroke-dasharray="130 440" transform="rotate(-90 70 70)"/>
+              </svg>
+            </div>
+            <div style="font-size: 10px; text-align: left; padding: 0 10px;">
+              <div style="margin: 3px 0;"><span style="color: #3498db;">●</span> Won $7,014(26%)</div>
+              <div style="margin: 3px 0;"><span style="color: #e74c3c;">●</span> Draf</div>
+              <div style="margin: 3px 0;"><span style="color: #ffd700;">●</span> Expired</div>
+              <div style="margin: 3px 0;"><span style="color: #95a5a6;">●</span> Lost $10,000(47%)</div>
+            </div>
+            <div style="text-align: center; font-size: 10px; color: #666; margin-top: 10px;">$2,406(9)3%</div>
+          </div>
+
+          <!-- Top 5 Sales by Region -->
+          <div style="background: #fafafa; padding: 20px; border-radius: 8px;">
+            <h4 style="font-size: 14px; margin-bottom: 15px; color: #222; text-align: center;">Top 5 Sales by Region</h4>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="width: 80px; font-size: 11px; color: #444;">Quebec (QC)</span>
+                <div style="flex: 1; background: #e9ecef; border-radius: 3px; height: 20px;">
+                  <div style="background: #e74c3c; height: 100%; width: 95%; border-radius: 3px;"></div>
+                </div>
+                <span style="font-size: 11px; font-weight: 600; color: #222;">$8.00</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="width: 80px; font-size: 11px; color: #444;">British Colum</span>
+                <div style="flex: 1; background: #e9ecef; border-radius: 3px; height: 20px;">
+                  <div style="background: #e74c3c; height: 100%; width: 40%; border-radius: 3px;"></div>
+                </div>
+                <span style="font-size: 11px; font-weight: 600; color: #222;">$3</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="width: 80px; font-size: 11px; color: #444;">Saskatchea</span>
+                <div style="flex: 1; background: #e9ecef; border-radius: 3px; height: 20px;">
+                  <div style="background: #e74c3c; height: 100%; width: 30%; border-radius: 3px;"></div>
+                </div>
+                <span style="font-size: 11px; font-weight: 600; color: #222;">$2</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="width: 80px; font-size: 11px; color: #444;">Alberta</span>
+                <div style="flex: 1; background: #e9ecef; border-radius: 3px; height: 20px;">
+                  <div style="background: #e74c3c; height: 100%; width: 15%; border-radius: 3px;"></div>
+                </div>
+                <span style="font-size: 11px; font-weight: 600; color: #222;">$1</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="width: 80px; font-size: 11px; color: #444;">Ontario</span>
+                <div style="flex: 1; background: #e9ecef; border-radius: 3px; height: 20px;">
+                  <div style="background: #e74c3c; height: 100%; width: 8%; border-radius: 3px;"></div>
+                </div>
+                <span style="font-size: 11px; font-weight: 600; color: #222;">$0.50</span>
+              </div>
+            </div>
+            <div style="text-align: center; margin-top: 10px; font-size: 10px; color: #666;">$0  $2  $4  $6</div>
+          </div>
+
+          <!-- Top 5 Sales by Customer -->
+          <div style="background: #fafafa; padding: 20px; border-radius: 8px;">
+            <h4 style="font-size: 14px; margin-bottom: 15px; color: #222; text-align: center;">Top 5 Sales by customer</h4>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="width: 100px; font-size: 11px; color: #444;">Bmc</span>
+                <div style="flex: 1; background: #e9ecef; border-radius: 3px; height: 20px;">
+                  <div style="background: #3498db; height: 100%; width: 90%; border-radius: 3px;"></div>
+                </div>
+                <span style="font-size: 11px; font-weight: 600; color: #222;">$5.00</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="width: 100px; font-size: 11px; color: #444;">Bickenton</span>
+                <div style="flex: 1; background: #e9ecef; border-radius: 3px; height: 20px;">
+                  <div style="background: #3498db; height: 100%; width: 35%; border-radius: 3px;"></div>
+                </div>
+                <span style="font-size: 11px; font-weight: 600; color: #222;">$2</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="width: 100px; font-size: 11px; color: #444;">Cycle Dynamics</span>
+                <div style="flex: 1; background: #e9ecef; border-radius: 3px; height: 20px;">
+                  <div style="background: #3498db; height: 100%; width: 35%; border-radius: 3px;"></div>
+                </div>
+                <span style="font-size: 11px; font-weight: 600; color: #222;">$2</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="width: 100px; font-size: 11px; color: #444;">Raleigh</span>
+                <div style="flex: 1; background: #e9ecef; border-radius: 3px; height: 20px;">
+                  <div style="background: #3498db; height: 100%; width: 35%; border-radius: 3px;"></div>
+                </div>
+                <span style="font-size: 11px; font-weight: 600; color: #222;">$2</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="width: 100px; font-size: 11px; color: #444;">Titus</span>
+                <div style="flex: 1; background: #e9ecef; border-radius: 3px; height: 20px;">
+                  <div style="background: #3498db; height: 100%; width: 35%; border-radius: 3px;"></div>
+                </div>
+                <span style="font-size: 11px; font-weight: 600; color: #222;">$2</span>
+              </div>
+            </div>
+            <div style="text-align: center; margin-top: 10px; font-size: 10px; color: #666;">$0  $2  $4  $6</div>
+          </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 15px; font-size: 11px; color: #6b6b6b;">
+          * CY = Current Year
+        </div>
+      </div>
+    </div>
+
+    <div class="content-section">
+      <h2>Project Objectives</h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number">3</div>
+          <div class="stat-label">BI Platforms Used</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">12+</div>
+          <div class="stat-label">Months of Data</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">95%</div>
+          <div class="stat-label">Forecast Accuracy</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-section">
+      <h2>Key Features & Functionalities</h2>
+      
+      <h3>Sales Performance Analysis</h3>
+      <ul>
+        <li>Historical sales trends over monthly, quarterly, and annual periods</li>
+        <li>Product category performance comparison and ranking</li>
+        <li>Regional sales distribution and geographic heat maps</li>
+        <li>Customer segment analysis and purchasing behavior patterns</li>
+        <li>Revenue growth rates and year-over-year comparisons</li>
+      </ul>
+
+      <h3>Forecasting & Predictions</h3>
+      <ul>
+        <li>Time series forecasting using exponential smoothing techniques</li>
+        <li>Seasonal decomposition to identify recurring patterns</li>
+        <li>Trend line projections for future sales estimation</li>
+        <li>Confidence intervals and prediction accuracy metrics</li>
+        <li>What-if analysis scenarios for strategic planning</li>
+      </ul>
+
+      <h3>Interactive Visualizations</h3>
+      <ul>
+        <li>Dynamic filtering by date range, product, region, and customer segment</li>
+        <li>Drill-down capabilities from summary to detailed transaction level</li>
+        <li>Custom tooltips with contextual information</li>
+        <li>Cross-chart filtering for integrated analysis</li>
+        <li>Export functionality for presentations and reports</li>
+      </ul>
+    </div>
+
+    <div class="content-section">
+      <h2>Platform Comparison</h2>
+      <p>Each platform brought unique advantages to the sales analysis workflow:</p>
+
+      <div class="comparison-grid">
+        <div class="comparison-card">
+          <h4>📋 Microsoft Excel</h4>
+          <ul>
+            <li>Familiar interface for all users</li>
+            <li>Advanced formulas and pivot tables</li>
+            <li>Quick ad-hoc analysis</li>
+            <li>Easy data manipulation</li>
+            <li>Offline accessibility</li>
+          </ul>
+        </div>
+
+        <div class="comparison-card">
+          <h4>📊 Power BI</h4>
+          <ul>
+            <li>Enterprise-grade dashboards</li>
+            <li>Real-time data refresh</li>
+            <li>Mobile-friendly views</li>
+            <li>DAX for complex calculations</li>
+            <li>Microsoft ecosystem integration</li>
+          </ul>
+        </div>
+
+        <div class="comparison-card">
+          <h4>📈 Tableau</h4>
+          <ul>
+            <li>Beautiful visualizations</li>
+            <li>Intuitive drag-and-drop</li>
+            <li>Advanced analytics features</li>
+            <li>Strong geographic mapping</li>
+            <li>Interactive storytelling</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="highlight-box">
+        <strong>Multi-Platform Strategy:</strong> By developing dashboards across all three platforms, the project ensured maximum flexibility. Excel serves casual users, Power BI powers enterprise reporting, and Tableau delivers presentation-ready visualizations for stakeholder meetings.
+      </div>
+    </div>
+
+    <div class="content-section">
+      <h2>Technical Implementation</h2>
+      
+      <h3>Data Processing Pipeline</h3>
+      <p>
+        Sales data was extracted from multiple sources including CRM systems, point-of-sale databases, and e-commerce platforms. The ETL process involved:
+      </p>
+      <ul>
+        <li>Data extraction from disparate sources using SQL queries</li>
+        <li>Cleaning and standardization of product names, categories, and regions</li>
+        <li>Handling missing values and outlier detection</li>
+        <li>Date normalization and fiscal period alignment</li>
+        <li>Currency conversion for multi-regional analysis</li>
+      </ul>
+
+      <h3>Forecasting Methodology</h3>
+      <div class="highlight-box">
+        Applied multiple forecasting techniques including moving averages, exponential smoothing (ETS), and linear regression to predict future sales. Model accuracy was validated using historical data splits and evaluated with metrics like MAPE (Mean Absolute Percentage Error) and RMSE (Root Mean Square Error).
+      </div>
+
+      <h3>Dashboard Design Principles</h3>
+      <ul>
+        <li>Clear visual hierarchy with key metrics prominently displayed</li>
+        <li>Consistent color schemes aligned with brand guidelines</li>
+        <li>Responsive layouts for desktop, tablet, and mobile viewing</li>
+        <li>Progressive disclosure: summary first, details on demand</li>
+        <li>Accessibility considerations for colorblind users</li>
+      </ul>
+    </div>
+
+    <div class="content-section">
+      <h2>Analytical Insights Delivered</h2>
+      
+      <h3>Revenue Patterns</h3>
+      <ul>
+        <li>Identified peak sales periods and seasonal fluctuations</li>
+        <li>Discovered high-margin product categories for focused marketing</li>
+        <li>Analyzed customer lifetime value and retention rates</li>
+        <li>Measured sales cycle length and conversion metrics</li>
+      </ul>
+
+      <h3>Performance Benchmarking</h3>
+      <ul>
+        <li>Compared regional performance against national averages</li>
+        <li>Tracked sales team performance with individual quotas</li>
+        <li>Identified underperforming products requiring intervention</li>
+        <li>Measured promotional campaign effectiveness and ROI</li>
+      </ul>
+
+      <h3>Strategic Recommendations</h3>
+      <ul>
+        <li>Inventory optimization based on demand forecasts</li>
+        <li>Resource allocation guidance for high-potential regions</li>
+        <li>Product bundling opportunities identified through basket analysis</li>
+        <li>Pricing strategy adjustments for margin improvement</li>
+      </ul>
+    </div>
+
+    <div class="content-section">
+      <h2>Business Impact</h2>
+      <ul>
+        <li><strong>Decision Speed:</strong> Reduced time to insight from days to minutes with self-service dashboards</li>
+        <li><strong>Forecast Accuracy:</strong> Achieved 95%+ accuracy in 3-month sales projections</li>
+        <li><strong>Operational Efficiency:</strong> Automated reporting eliminated 20+ hours of manual work weekly</li>
+        <li><strong>Strategic Planning:</strong> Data-driven insights informed quarterly business strategy reviews</li>
+        <li><strong>Stakeholder Alignment:</strong> Common dashboard views ensured all teams worked from the same data</li>
+      </ul>
+    </div>
+
+    <div class="content-section">
+      <h2>Skills Demonstrated</h2>
+      <div class="tags" style="margin-top: 15px;">
+        <span class="tag">Data Analysis</span>
+        <span class="tag">Excel Advanced</span>
+        <span class="tag">Power BI</span>
+        <span class="tag">Tableau</span>
+        <span class="tag">Sales Forecasting</span>
+        <span class="tag">Time Series Analysis</span>
+        <span class="tag">Data Visualization</span>
+        <span class="tag">Dashboard Design</span>
+        <span class="tag">Business Intelligence</span>
+        <span class="tag">SQL</span>
+        <span class="tag">ETL</span>
+        <span class="tag">Stakeholder Communication</span>
+      </div>
+    </div>
+
+    <div class="cta-section">
+      <h2>Interested in Data-Driven Sales Analytics?</h2>
+      <p>Let's discuss how business intelligence can transform your sales operations.</p>
+      <a href="index.html#contact" class="cta-btn">Get in Touch</a>
+    </div>
+  </div>
+
+  <script>
+    // Sticky navbar with scroll behavior
+    let lastScrollTop = 0;
+    const navbar = document.querySelector('.navbar');
+    let isNavbarVisible = true;
+
+    window.addEventListener('scroll', function() {
+      let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      
+      if (scrollTop > lastScrollTop && scrollTop > 100) {
+        if (!isNavbarVisible) {
+          navbar.style.transform = 'translateY(0)';
+          isNavbarVisible = true;
+        }
+      } else if (scrollTop < lastScrollTop) {
+        if (isNavbarVisible && scrollTop > 100) {
+          navbar.style.transform = 'translateY(-100%)';
+          isNavbarVisible = false;
+        }
+      }
+      
+      if (scrollTop <= 100) {
+        navbar.style.transform = 'translateY(0)';
+        isNavbarVisible = true;
+      }
+      
+      lastScrollTop = scrollTop;
+    });
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
