@@ -323,19 +323,20 @@ a{color:var(--dark);text-decoration:none;transition:all 0.3s ease}
     grid-template-columns: 1fr;
   
   }
-
+}
   @media (max-width: 768px) {
   .container {
     flex-direction: column;
   }
+}
   .sidebar {
     width: 100%;
     position: relative;
     top: auto;
     transform: none;
   }
-} 
-}
+ 
+
 
 /* Project card styling */
 .project {
