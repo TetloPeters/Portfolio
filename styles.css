@@ -316,6 +316,18 @@ a{color:var(--dark);text-decoration:none;transition:all 0.3s ease}
   .projects-grid {
     grid-template-columns: 1fr;
   }
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+    position: relative;
+    top: auto;
+    transform: none;
+  }
+
 }
 
 /* Project card styling */
@@ -420,27 +432,6 @@ a{color:var(--dark);text-decoration:none;transition:all 0.3s ease}
   gap: 8px;
   color: var(--accent-hover);
 }
-.project-tags{
-  margin-top:10px;
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-}
-
-.tag{
-  background:rgba(143,201,198,0.15);
-  color:var(--dark);
-  padding:4px 10px;
-  border-radius:12px;
-  font-size:11px;
-  font-weight:500;
-  transition:all 0.3s ease;
-}
-
-.project:hover .tag{
-  background:var(--accent);
-  color:var(--dark);
-}
 
 /* ==========================================
    FOOTER
@@ -455,34 +446,3 @@ a{color:var(--dark);text-decoration:none;transition:all 0.3s ease}
   border-top:1px solid #e9ecef;
 }
 
-/* ==========================================
-   RESPONSIVE DESIGN
-   ========================================== */
-
-/* Force 4 columns on larger screens (laptop/desktop) */
-@media (min-width: 1024px) {
-  .projects-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* 4 columns on very wide screens */
-@media (min-width: 1400px) {
-  .projects-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-/* Tablet view - 2 columns */
-@media (max-width: 1023px) and (min-width: 768px) {
-  .projects-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* Mobile view - 1 column */
-@media (max-width: 767px) {
-  .projects-grid {
-    grid-template-columns: 1fr;
-  }
-}
