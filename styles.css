@@ -316,8 +316,15 @@ a{color:var(--dark);text-decoration:none;transition:all 0.3s ease}
   .projects-grid {
     grid-template-columns: 1fr;
   }
+}
+/* Mobile view - 1 column */
+@media (max-width: 767px) {
+  .projects-grid {
+    grid-template-columns: 1fr;
+  
+  }
 
-@media (max-width: 768px) {
+  @media (max-width: 768px) {
   .container {
     flex-direction: column;
   }
@@ -327,7 +334,7 @@ a{color:var(--dark);text-decoration:none;transition:all 0.3s ease}
     top: auto;
     transform: none;
   }
-
+} 
 }
 
 /* Project card styling */
@@ -446,3 +453,34 @@ a{color:var(--dark);text-decoration:none;transition:all 0.3s ease}
   border-top:1px solid #e9ecef;
 }
 
+/* ==========================================
+   RESPONSIVE DESIGN
+   ========================================== */
+
+/* Force 4 columns on larger screens (laptop/desktop) */
+@media (min-width: 1024px) {
+  .projects-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* 4 columns on very wide screens */
+@media (min-width: 1400px) {
+  .projects-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Tablet view - 2 columns */
+@media (max-width: 1023px) and (min-width: 768px) {
+  .projects-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Mobile view - 1 column */
+@media (max-width: 767px) {
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+}
